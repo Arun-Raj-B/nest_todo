@@ -33,10 +33,9 @@ export class TodoController {
   //   status: 500,
   //   description: 'Internal Server Error',
   // })
-  // createTodo(@Body() body: CreateTodoDto) {
-  //   return body;
-  // }
-
+  createTodo(@Body() body: CreateTodoDto) {
+    return body;
+  }
   @Put(':id')
   updateTodo(@Param(':id') id: string) {
     return 'todo updated';
