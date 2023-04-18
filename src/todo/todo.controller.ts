@@ -25,17 +25,17 @@ export class TodoController {
     status: 200,
     description: 'Successfully added a new todo',
   })
-  @ApiResponse({
-    status: 403,
-    description: 'Forbidden',
-  })
-  @ApiResponse({
-    status: 500,
-    description: 'Internal Server Error',
-  })
-  createTodo(@Body() body: CreateTodoDto) {
-    return body;
-  }
+  // @ApiResponse({
+  //   status: 403,
+  //   description: 'Forbidden',
+  // })
+  // @ApiResponse({
+  //   status: 500,
+  //   description: 'Internal Server Error',
+  // })
+  // createTodo(@Body() body: CreateTodoDto) {
+  //   return body;
+  // }
 
   @Put(':id')
   updateTodo(@Param(':id') id: string) {
