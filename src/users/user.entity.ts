@@ -1,4 +1,5 @@
-import { AfterInsert, Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Todo } from 'src/todo/todo.entity';
+import { AfterInsert, Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class User {
@@ -10,6 +11,9 @@ export class User {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Todo, (todo) => todo.user)
+  todos: Todo[]
 
   @AfterInsert()
   logInsert() {

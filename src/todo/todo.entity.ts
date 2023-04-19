@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/users/user.entity';
+import { Entity, Column, PrimaryGeneratedColumn, AfterInsert, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Todo {
@@ -13,4 +14,12 @@ export class Todo {
 
   @Column()
   status: number;
+
+  @ManyToOne(() => User, (user) => user.todos)
+  user: User
+
+  @AfterInsert()
+  logInsert() {
+    console.log('Inserted todo with todo Id', this.id);
+  }
 }
