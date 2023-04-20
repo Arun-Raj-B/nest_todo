@@ -3,22 +3,25 @@ import {
   Get,
   Post,
   Delete,
-  Put,
   Body,
   Param,
-  UseGuards
+  UseGuards,
+  Patch
 } from '@nestjs/common';
 import { CreateTodoDto } from './dtos/create-todo.dto';
 
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger/dist';
+import { ApiCreatedResponse, ApiForbiddenResponse, ApiInternalServerErrorResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger/dist';
 import { TodoService } from './todo.service';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CurrentUser } from 'src/users/decorators/current-user.decorator';
 import { User } from 'src/users/user.entity';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { TodoDto } from './dtos/todo.dto';
+import { Todo } from './todo.entity';
+import { UpdateTodoDto } from './dtos/update-todo.dto';
 
 @ApiTags('Todo')
+@UseGuards(AuthGuard)
 @Controller('todo')
 export class TodoController {
 
@@ -28,28 +31,27 @@ export class TodoController {
     return 'all todos';
   }
 
-  @Post()
-  @UseGuards(AuthGuard)
   @ApiOperation({ summary: 'Add a Todo' })
-  @ApiResponse({
-    status: 200,
+  @ApiCreatedResponse({
     description: 'Successfully added a new todo',
+    type: CreateTodoDto
   })
-  // @ApiResponse({
-  //   status: 403,
-  //   description: 'Forbidden',
-  // })
-  // @ApiResponse({
-  //   status: 500,
-  //   description: 'Internal Server Error',
-  // })
+  @ApiForbiddenResponse({
+    description: "Forbidden"
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error'
+  })
+  @Post()
   @Serialize(TodoDto)
-  createTodo(@Body() body: CreateTodoDto, @CurrentUser() user: User) {
+  create(@Body() body: CreateTodoDto, @CurrentUser() user: User) {
     return this.todoService.create(body, user);
   }
-  @Put(':id')
-  updateTodo(@Param(':id') id: string) {
-    return 'todo updated';
+
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() body: UpdateTodoDto, @CurrentUser() currentUser: User) {
+    const currentUserId = currentUser.id
+    return this.todoService.update(parseInt(id), body, currentUserId)
   }
 
   @Delete(':id')

@@ -8,15 +8,15 @@ enum status {
 }
 
 export class CreateTodoDto {
-  @ApiProperty()
+  @ApiProperty({ example: 'Todo 1' })
   @IsString()
   heading: string;
 
-  @ApiProperty()
+  @ApiProperty({ example: "This is my first todo" })
   @IsString()
   description: string;
 
-  @ApiProperty()
+  @ApiProperty({ enum: ['Pending', 'Ongoing', 'Completed'] })
   @IsEnum(status)
-  status: status = 1;
+  status: status = status.Pending;
 }

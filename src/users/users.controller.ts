@@ -9,7 +9,7 @@ import {
   UseInterceptors,
   UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger/dist';
+import { ApiCreatedResponse, ApiForbiddenResponse, ApiInternalServerErrorResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger/dist';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
@@ -32,6 +32,13 @@ export class UsersController {
 
   // signup router
   @ApiOperation({ summary: 'Sign up a user' })
+  @ApiCreatedResponse({
+    description: 'Signed up successfully',
+    type: CreateUserDto
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error'
+  })
   @Post('/signup')
   async createUser(@Body() body: CreateUserDto, @Session() session: any) {
     const user = await this.authService.signup(body.email, body.password);
@@ -39,7 +46,7 @@ export class UsersController {
     return user;
   }
 
-  @ApiOperation({ summary: 'Get a user by id' })
+  @ApiOperation({ summary: 'Get a user by email' })
   @Get('/user/:email')
   async getUser(@Param('email') email: string) {
     const user = await this.usersService.find(email);
@@ -51,6 +58,13 @@ export class UsersController {
 
   // signin router
   @ApiOperation({ summary: 'Sign in a user' })
+  @ApiCreatedResponse({
+    description: 'Signed in successfully',
+    type: CreateUserDto
+  })
+  @ApiInternalServerErrorResponse({
+    description: 'Internal Server Error'
+  })
   @Post('/signin')
   async signIn(@Body() body: CreateUserDto, @Session() session: any) {
     const user = await this.authService.signin(body.email, body.password);
@@ -61,6 +75,9 @@ export class UsersController {
 
   //signout router
   @ApiOperation({ summary: 'Sign out the user' })
+  @ApiCreatedResponse({
+    description: 'Signed out successfully',
+  })
   @Post('/signout')
   signOut(@Session() session: any) {
     session.userId = null;
