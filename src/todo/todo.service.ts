@@ -15,7 +15,7 @@ export class TodoService {
         return this.repo.save(todo)
     }
 
-    async verifyUser(todoUserId: number, currentUserId) {
+    verifyUser(todoUserId: number, currentUserId) {
         if (todoUserId !== currentUserId) {
             throw new UnauthorizedException("You are not authorized to edit this")
         }
@@ -23,11 +23,11 @@ export class TodoService {
     }
 
     async update(todoId: number, attrs: Partial<Todo>, currentUserId: number) {
-        const todo = await this.repo.createQueryBuilder().select("*").where({ todoId }).getRawOne();
+        const todo = await this.repo.createQueryBuilder().select("*").where({ id: todoId }).getRawOne();
         if (!todo) {
             throw new NotFoundException(`Todo with id : ${todoId} was not found`)
         }
-        const verify = await this.verifyUser(todo.userId, currentUserId);
+        const verify = this.verifyUser(todo.userId, currentUserId);
         if (verify) {
             Object.assign(todo, attrs)
             return this.repo.save(todo)
