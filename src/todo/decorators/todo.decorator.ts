@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 
-export const EditTodo = createParamDecorator(
+export const UpdateTodo = createParamDecorator(
     (data: never, context: ExecutionContext) => {
         const request = context.switchToHttp().getRequest();
         return request.todo;

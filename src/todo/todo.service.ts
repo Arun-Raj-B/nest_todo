@@ -26,4 +26,8 @@ export class TodoService {
         Object.assign(todo, attrs)
         return this.repo.save(todo)
     }
+
+    remove(id: number, todo: Todo) {
+        return this.repo.remove(todo);
+    }
 }

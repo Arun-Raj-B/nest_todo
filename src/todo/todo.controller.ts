@@ -6,7 +6,8 @@ import {
   Body,
   Param,
   UseGuards,
-  Patch
+  Patch,
+  Put
 } from '@nestjs/common';
 import { CreateTodoDto } from './dtos/create-todo.dto';
 
@@ -19,7 +20,8 @@ import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { TodoDto } from './dtos/todo.dto';
 import { Todo } from './todo.entity';
 import { UpdateTodoDto } from './dtos/update-todo.dto';
-import { EditTodo } from './decorators/todo.decorator';
+import { UpdateTodo } from './decorators/todo.decorator';
+import { TodoAuthGuard } from './guards/todoAuth.guard';
 
 @ApiTags('Todo')
 @UseGuards(AuthGuard)
@@ -56,12 +58,14 @@ export class TodoController {
   })
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: UpdateTodoDto, @EditTodo() todo: Todo) {
+  @UseGuards(TodoAuthGuard)
+  update(@Param('id') id: string, @Body() body: UpdateTodoDto, @UpdateTodo() todo: Todo) {
     return this.todoService.update(parseInt(id), body, todo)
   }
 
   @Delete(':id')
-  removeTodo() {
-    return 'todo deleted';
+  @UseGuards(TodoAuthGuard)
+  removeTodo(@Param('id') id: string, @UpdateTodo() todo: Todo) {
+    return this.todoService.remove(parseInt(id), todo);
   }
 }
