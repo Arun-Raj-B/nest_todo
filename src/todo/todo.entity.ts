@@ -13,7 +13,7 @@ export class Todo {
   description: string;
 
   @Column()
-  status: number;
+  status: number; 
 
   @ManyToOne(() => User, (user) => user.todos)
   user: User

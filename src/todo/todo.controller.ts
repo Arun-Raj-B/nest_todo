@@ -19,6 +19,7 @@ import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { TodoDto } from './dtos/todo.dto';
 import { Todo } from './todo.entity';
 import { UpdateTodoDto } from './dtos/update-todo.dto';
+import { EditTodo } from './decorators/todo.decorator';
 
 @ApiTags('Todo')
 @UseGuards(AuthGuard)
@@ -48,10 +49,15 @@ export class TodoController {
     return this.todoService.create(body, user);
   }
 
+  @ApiOperation({ summary: 'Edit a todo' })
+  @ApiCreatedResponse({
+    description: 'Successfully updated the todo',
+    type: UpdateTodoDto
+  })
+
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: UpdateTodoDto, @CurrentUser() currentUser: User) {
-    const currentUserId = currentUser.id
-    return this.todoService.update(parseInt(id), body, currentUserId)
+  update(@Param('id') id: string, @Body() body: UpdateTodoDto, @EditTodo() todo: Todo) {
+    return this.todoService.update(parseInt(id), body, todo)
   }
 
   @Delete(':id')
