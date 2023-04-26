@@ -90,4 +90,10 @@ export class UsersController {
   whoAmI(@CurrentUser() user: User) {
     return user;
   }
+
+  @ApiOperation({ summary: 'Test typeORM relation' })
+  @Get('/test')
+  testFunction() {
+    return this.usersService.test()
+  }
 }
