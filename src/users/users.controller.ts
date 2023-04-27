@@ -22,7 +22,7 @@ import { AuthGuard } from 'src/guards/auth.guard';
 
 @ApiTags('User Auth')
 @Controller('auth')
-@Serialize(UserDto)
+// @Serialize(UserDto)
 // @UseInterceptors(CurrentUserInterceptor)
 export class UsersController {
   constructor(
@@ -91,9 +91,9 @@ export class UsersController {
     return user;
   }
 
-  @ApiOperation({ summary: 'Test typeORM relation' })
-  @Get('/test')
-  testFunction() {
-    return this.usersService.test()
+  @ApiOperation({ summary: 'Get all the todos of the user' })
+  @Get('/allTodos/:id')
+  usersAndTodos(@Param('id') id: string) {
+    return this.usersService.usersAndTodos(parseInt(id))
   }
 }

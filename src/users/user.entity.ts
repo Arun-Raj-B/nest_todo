@@ -1,12 +1,12 @@
 import { Todo } from 'src/todo/todo.entity';
-import { AfterInsert, Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { AfterInsert, Entity, Column, PrimaryGeneratedColumn, OneToMany, DataSource } from 'typeorm';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column() 
+  @Column()
   email: string;
 
   @Column()

@@ -60,12 +60,19 @@ export class TodoController {
   @Patch(':id')
   @UseGuards(TodoAuthGuard)
   update(@Param('id') id: string, @Body() body: UpdateTodoDto, @UpdateTodo() todo: Todo) {
-    return this.todoService.update(parseInt(id), body, todo)
+    return this.todoService.update(body, todo)
   }
 
+  @ApiOperation({ summary: 'Delete a todo' })
   @Delete(':id')
   @UseGuards(TodoAuthGuard)
   removeTodo(@Param('id') id: string, @UpdateTodo() todo: Todo) {
-    return this.todoService.remove(parseInt(id), todo);
+    return this.todoService.remove(todo);
+  }
+
+  @ApiOperation({ summary: 'Get all todos with corresponding user' })
+  @Get('/allDetails/:id')
+  todoAndUser(@Param('id') id: string,) {
+    return this.todoService.todoAndUser(parseInt(id))
   }
 }

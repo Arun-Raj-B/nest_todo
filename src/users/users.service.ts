@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
@@ -26,18 +26,30 @@ export class UsersService {
     return user;
   }
 
-  async test() {
+  async usersAndTodos(id: number) {
 
     // don't user serialize decorator in the controller when using this route
-    const id = 2;
 
-    const testData =
-      await this.repo
-        .createQueryBuilder()
-        .relation(User, 'todos')
-        .of(id)
-        .loadMany();
-    return testData;
+    // // Method 1
+
+    // const testData =
+    //   await this.repo
+    //     .createQueryBuilder()
+    //     .relation(User, 'todos')
+    //     .of(id)
+    //     .loadMany();
+
+    // // Method 2
+
+    const testData = await this.repo.createQueryBuilder("user").leftJoinAndSelect("user.todos", "todo").
+      where("user.id = :id", { id: id }).
+      getMany();
+
+    if (!testData.length) {
+      throw new NotFoundException('No user with that id')
+    } else {
+      return testData[0].todos;
+    }
   }
 
 }

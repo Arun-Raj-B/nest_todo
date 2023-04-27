@@ -22,12 +22,19 @@ export class TodoService {
     //     return true;
     // }
 
-    async update(todoId: number, attrs: Partial<Todo>, todo: Todo) {
+    async update(attrs: Partial<Todo>, todo: Todo) {
         Object.assign(todo, attrs)
         return this.repo.save(todo)
     }
 
-    remove(id: number, todo: Todo) {
+    remove(todo: Todo) {
         return this.repo.remove(todo);
     }
+
+    todoAndUser(id: number) {
+        return this.repo.createQueryBuilder("todo").
+            innerJoinAndSelect("todo.user", "user", "user.id = :id", { id: id }).
+            getMany()
+    }
+
 }
