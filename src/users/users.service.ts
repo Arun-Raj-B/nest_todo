@@ -26,9 +26,9 @@ export class UsersService {
     return user;
   }
 
-  async usersAndTodos(id: number) {
+  async allUserTodo(id: number) {
 
-    // don't user serialize decorator in the controller when using this route
+    // don't use serialize decorator in the controller when using this route
 
     // // Method 1
 
@@ -51,5 +51,4 @@ export class UsersService {
       return testData[0].todos;
     }
   }
-
 }

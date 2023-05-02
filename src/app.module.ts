@@ -6,13 +6,14 @@ import { UsersModule } from './users/users.module';
 import { TodoModule } from './todo/todo.module';
 import { Todo } from './todo/todo.entity';
 import { User } from './users/user.entity';
+import { TodoUserView } from './todoView.entity';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db.sqlite',
-      entities: [Todo, User],
+      entities: [Todo, User, TodoUserView], 
       synchronize: true,
     }),
     UsersModule,
@@ -21,4 +22,4 @@ import { User } from './users/user.entity';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

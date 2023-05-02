@@ -1,5 +1,5 @@
 import { Todo } from 'src/todo/todo.entity';
-import { AfterInsert, Entity, Column, PrimaryGeneratedColumn, OneToMany, DataSource } from 'typeorm';
+import { AfterInsert, Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 
 @Entity()
 export class User {

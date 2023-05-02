@@ -4,6 +4,8 @@ import { Todo } from './todo.entity';
 import { Repository } from 'typeorm';
 import { CreateTodoDto } from './dtos/create-todo.dto';
 import { User } from 'src/users/user.entity';
+import { getRepository } from 'typeorm';
+import { TodoUserView } from 'src/todoView.entity';
 
 @Injectable()
 export class TodoService {
@@ -35,6 +37,16 @@ export class TodoService {
         return this.repo.createQueryBuilder("todo").
             innerJoinAndSelect("todo.user", "user", "user.id = :id", { id: id }).
             getMany()
+    }
+
+    async testView() {
+        console.log("testView working")
+        const todoUserRepository = getRepository(TodoUserView)
+
+        console.log("todoUserRepository working")
+
+        const viewData = await todoUserRepository.find()
+        return viewData
     }
 
 }

@@ -9,6 +9,4 @@ import { Todo } from './todo.entity';
   providers: [TodoService],
   controllers: [TodoController],
 })
-export class TodoModule {
-
-}
+export class TodoModule {}

@@ -93,7 +93,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Get all the todos of the user' })
   @Get('/allTodos/:id')
-  usersAndTodos(@Param('id') id: string) {
-    return this.usersService.usersAndTodos(parseInt(id))
+  allUserTodo(@Param('id') id: string) {
+    return this.usersService.allUserTodo(parseInt(id))
   }
 }

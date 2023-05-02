@@ -75,4 +75,11 @@ export class TodoController {
   todoAndUser(@Param('id') id: string,) {
     return this.todoService.todoAndUser(parseInt(id))
   }
+
+
+  @ApiOperation({ summary: 'Test view' })
+  @Get('/testView')
+  testView() {
+    return this.todoService.testView()
+  }
 }
