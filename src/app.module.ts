@@ -13,7 +13,7 @@ import { TodoUserView } from './todoView.entity';
     TypeOrmModule.forRoot({
       type: 'sqlite',
       database: 'db.sqlite',
-      entities: [Todo, User, TodoUserView], 
+      entities: [Todo, User, TodoUserView],
       synchronize: true,
     }),
     UsersModule,
