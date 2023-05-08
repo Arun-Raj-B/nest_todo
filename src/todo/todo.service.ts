@@ -15,6 +15,15 @@ export class TodoService {
         @InjectConnection() private connection: Connection
     ) { }
 
+
+    find() {
+        return this.repo.find()
+    }
+
+    restore(id: number) {
+        return this.repo.createQueryBuilder().restore().where("id = :id", { id }).execute()
+    }
+
     create(todoDto: CreateTodoDto, user: User) {
         const todo = this.repo.create(todoDto);
         todo.user = user;
@@ -35,6 +44,10 @@ export class TodoService {
 
     remove(todo: Todo) {
         return this.repo.remove(todo);
+    }
+
+    softDelete(id: number) {
+        return this.repo.createQueryBuilder().softDelete().where("id = :id", { id }).execute();
     }
 
     todoAndUser(id: number) {

@@ -18,5 +18,6 @@ export class CreateTodoDto {
 
   @ApiProperty({ enum: ['Pending', 'Ongoing', 'Completed'] })
   @IsEnum(status)
-  status: status = status.Pending;
+  status: status
 }
+

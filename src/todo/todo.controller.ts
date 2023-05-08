@@ -31,7 +31,7 @@ export class TodoController {
   constructor(private todoService: TodoService) { }
   @Get()
   allTodos() {
-    return 'all todos';
+    return this.todoService.find();
   }
 
   @ApiOperation({ summary: 'Add a Todo' })
@@ -67,7 +67,15 @@ export class TodoController {
   @Delete(':id')
   @UseGuards(TodoAuthGuard)
   removeTodo(@Param('id') id: string, @UpdateTodo() todo: Todo) {
-    return this.todoService.remove(todo);
+    // return this.todoService.remove(todo);
+    return this.todoService.softDelete(parseInt(id))
+  }
+
+  @ApiOperation({ summary: 'Restore a todo' })
+  @Get(':id')
+  restoreTodo(@Param('id') id: string) {
+    // return this.todoService.remove(todo);
+    return this.todoService.restore(parseInt(id))
   }
 
   @ApiOperation({ summary: 'Get all todos with corresponding user' })

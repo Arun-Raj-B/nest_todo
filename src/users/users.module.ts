@@ -6,6 +6,9 @@ import { UsersController } from './users.controller';
 import { User } from './user.entity';
 import { AuthService } from './auth.service';
 import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
+import { testService1 } from './testService1';
+import { testService2 } from './testService2';
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
@@ -16,7 +19,9 @@ import { CurrentUserInterceptor } from './interceptors/current-user.interceptor'
       provide: APP_INTERCEPTOR,
       useClass: CurrentUserInterceptor,
     },
+    testService1,
+    testService2
   ],
-  controllers: [UsersController],
+  controllers: [UsersController, AuthController],
 })
 export class UsersModule { }

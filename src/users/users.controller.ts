@@ -20,34 +20,34 @@ import { CurrentUser } from './decorators/current-user.decorator';
 import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 import { AuthGuard } from 'src/guards/auth.guard';
 
-@ApiTags('User Auth')
-@Controller('auth')
+@ApiTags('User Helpers')
+@Controller('user')
 // @Serialize(UserDto)
 // @UseInterceptors(CurrentUserInterceptor)
 export class UsersController {
   constructor(
     private usersService: UsersService,
-    private authService: AuthService,
+    // private authService: AuthService,
   ) { }
 
   // signup router
-  @ApiOperation({ summary: 'Sign up a user' })
-  @ApiCreatedResponse({
-    description: 'Signed up successfully',
-    type: CreateUserDto
-  })
-  @ApiInternalServerErrorResponse({
-    description: 'Internal Server Error'
-  })
-  @Post('/signup')
-  async createUser(@Body() body: CreateUserDto, @Session() session: any) {
-    const user = await this.authService.signup(body.email, body.password);
-    session.userId = user.id;
-    return user;
-  }
+  // @ApiOperation({ summary: 'Sign up a user' })
+  // @ApiCreatedResponse({
+  //   description: 'Signed up successfully',
+  //   type: CreateUserDto
+  // })
+  // @ApiInternalServerErrorResponse({
+  //   description: 'Internal Server Error'
+  // })
+  // @Post('/signup')
+  // async createUser(@Body() body: CreateUserDto, @Session() session: any) {
+  //   const user = await this.authService.signup(body.email, body.password);
+  //   session.userId = user.id;
+  //   return user;
+  // }
 
   @ApiOperation({ summary: 'Get a user by email' })
-  @Get('/user/:email')
+  @Get(':email')
   async getUser(@Param('email') email: string) {
     const user = await this.usersService.find(email);
     if (!user) {
@@ -56,37 +56,37 @@ export class UsersController {
     return user;
   }
 
-  // signin router
-  @ApiOperation({ summary: 'Sign in a user' })
-  @ApiCreatedResponse({
-    description: 'Signed in successfully',
-    type: CreateUserDto
-  })
-  @ApiInternalServerErrorResponse({
-    description: 'Internal Server Error'
-  })
-  @Post('/signin')
-  async signIn(@Body() body: CreateUserDto, @Session() session: any) {
-    const user = await this.authService.signin(body.email, body.password);
-    console.log(session.userId);
-    session.userId = user.id;
-    return user;
-  }
+  // // signin router
+  // @ApiOperation({ summary: 'Sign in a user' })
+  // @ApiCreatedResponse({
+  //   description: 'Signed in successfully',
+  //   type: CreateUserDto
+  // })
+  // @ApiInternalServerErrorResponse({
+  //   description: 'Internal Server Error'
+  // })
+  // @Post('/signin')
+  // async signIn(@Body() body: CreateUserDto, @Session() session: any) {
+  //   const user = await this.authService.signin(body.email, body.password);
+  //   console.log(session.userId);
+  //   session.userId = user.id;
+  //   return user;
+  // }
 
   //signout router
-  @ApiOperation({ summary: 'Sign out the user' })
-  @ApiCreatedResponse({
-    description: 'Signed out successfully',
-  })
-  @Post('/signout')
-  signOut(@Session() session: any) {
-    session.userId = null;
-  }
+  // @ApiOperation({ summary: 'Sign out the user' })
+  // @ApiCreatedResponse({
+  //   description: 'Signed out successfully',
+  // })
+  // @Post('/signout')
+  // signOut(@Session() session: any) {
+  //   session.userId = null;
+  // }
 
   //signed in user
   @ApiOperation({ summary: 'Currently signed in user' })
   @UseGuards(AuthGuard)
-  @Get('/whoami')
+  @Get('/currentuser')
   whoAmI(@CurrentUser() user: User) {
     return user;
   }

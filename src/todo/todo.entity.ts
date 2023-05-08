@@ -1,5 +1,5 @@
 import { User } from 'src/users/user.entity';
-import { Entity, Column, PrimaryGeneratedColumn, AfterInsert, ManyToOne, BeforeRemove } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, AfterInsert, ManyToOne, BeforeRemove, DeleteDateColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Todo {
@@ -14,6 +14,15 @@ export class Todo {
 
   @Column()
   status: number;
+
+  @CreateDateColumn()
+  created!:Date; 
+
+  @UpdateDateColumn()
+  updated!:Date; 
+
+  @DeleteDateColumn()
+  deleteAt?:Date; 
 
   @ManyToOne(() => User, (user) => user.todos)
   user: User
