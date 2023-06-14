@@ -7,17 +7,19 @@ import {
     Session,
     UseInterceptors,
     UseGuards,
+    UsePipes
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiForbiddenResponse, ApiInternalServerErrorResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger/dist';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
-import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
 import { User } from './user.entity';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { ValidationPipe } from './pipes/testPipe';
 
 @ApiTags('User Auth')
 @Controller('auth')
@@ -37,8 +39,11 @@ export class AuthController {
     @ApiInternalServerErrorResponse({
         description: 'Internal Server Error'
     })
+    // @UsePipes(ValidationPipe)
+    // global custom validation is done
     @Post('/signup')
     async createUser(@Body() body: CreateUserDto, @Session() session: any) {
+        console.log(body)
         const user = await this.authService.signup(body.email, body.password);
         session.userId = user.id;
         return user;

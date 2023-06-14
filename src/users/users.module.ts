@@ -6,8 +6,8 @@ import { UsersController } from './users.controller';
 import { User } from './user.entity';
 import { AuthService } from './auth.service';
 import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
-import { testService1 } from './testService1';
-import { testService2 } from './testService2';
+// import { testService1 } from './testService1';
+// import { testService2 } from './testService2';
 import { AuthController } from './auth.controller';
 
 @Module({
@@ -19,8 +19,8 @@ import { AuthController } from './auth.controller';
       provide: APP_INTERCEPTOR,
       useClass: CurrentUserInterceptor,
     },
-    testService1,
-    testService2
+    // testService1,
+    // testService2
   ],
   controllers: [UsersController, AuthController],
 })

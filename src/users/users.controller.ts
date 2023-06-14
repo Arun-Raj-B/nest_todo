@@ -4,21 +4,28 @@ import {
   Body,
   Param,
   Get,
+  Query,
   NotFoundException,
   Session,
   UseInterceptors,
   UseGuards,
+  UsePipes,
+  ParseArrayPipe,
+  Inject
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiForbiddenResponse, ApiInternalServerErrorResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger/dist';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UsersService } from './users.service';
-import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { Serialize } from '../interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
 import { User } from './user.entity';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { CurrentUserInterceptor } from './interceptors/current-user.interceptor';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../guards/auth.guard';
+import { ValidationPipe } from './pipes/testPipe';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @ApiTags('User Helpers')
 @Controller('user')
@@ -27,6 +34,7 @@ import { AuthGuard } from 'src/guards/auth.guard';
 export class UsersController {
   constructor(
     private usersService: UsersService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache
     // private authService: AuthService,
   ) { }
 
@@ -83,17 +91,37 @@ export class UsersController {
   //   session.userId = null;
   // }
 
-  //signed in user
-  @ApiOperation({ summary: 'Currently signed in user' })
-  @UseGuards(AuthGuard)
-  @Get('/currentuser')
-  whoAmI(@CurrentUser() user: User) {
-    return user;
-  }
-
   @ApiOperation({ summary: 'Get all the todos of the user' })
   @Get('/allTodos/:id')
-  allUserTodo(@Param('id') id: string) {
-    return this.usersService.allUserTodo(parseInt(id))
+  // @UsePipes(testPipe)
+  async allUserTodo(@Param('id') id: string) {
+    const returnValue = await this.usersService.allUserTodo(parseInt(id))
+    await this.cacheManager.set('todoFound', returnValue, 100000);
+    return returnValue;
+  }
+
+  // @ApiOperation({ summary: 'Testing query arrays' })
+  // @Get()
+  // TestQuery(
+  //   @Query('ids', new ParseArrayPipe({ items: Number, separator: ',' }))
+  //   ids: number[],
+  // ) {
+  //   return ids;
+  // }
+
+  // //signed in user
+  // @ApiOperation({ summary: 'Currently signed in user' })
+  // @UseGuards(AuthGuard)
+  // @Get()
+  // // @UsePipes(testPipe)
+  // whoAmI(@CurrentUser() user: User) {
+  //   return user;
+  // }
+
+  @Get('cache/:id')
+  async getRecentPost(@Param('id') id: string) {
+    const value = await this.cacheManager.get('todoFound');
+    console.log('This is the return value', typeof value);
+    return value;
   }
 }

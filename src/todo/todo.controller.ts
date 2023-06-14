@@ -7,16 +7,17 @@ import {
   Param,
   UseGuards,
   Patch,
-  Put
+  Put,
+  Inject
 } from '@nestjs/common';
 import { CreateTodoDto } from './dtos/create-todo.dto';
 
 import { ApiCreatedResponse, ApiForbiddenResponse, ApiInternalServerErrorResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger/dist';
 import { TodoService } from './todo.service';
-import { AuthGuard } from 'src/guards/auth.guard';
-import { CurrentUser } from 'src/users/decorators/current-user.decorator';
-import { User } from 'src/users/user.entity';
-import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { AuthGuard } from '../guards/auth.guard';
+import { CurrentUser } from '../users/decorators/current-user.decorator';
+import { User } from '../users/user.entity';
+import { Serialize } from '../interceptors/serialize.interceptor';
 import { TodoDto } from './dtos/todo.dto';
 import { Todo } from './todo.entity';
 import { UpdateTodoDto } from './dtos/update-todo.dto';
@@ -28,7 +29,9 @@ import { TodoAuthGuard } from './guards/todoAuth.guard';
 @Controller('todo')
 export class TodoController {
 
-  constructor(private todoService: TodoService) { }
+  constructor(private todoService: TodoService
+  ) { }
+
   @Get()
   allTodos() {
     return this.todoService.find();
@@ -47,7 +50,7 @@ export class TodoController {
   })
   @Post()
   @Serialize(TodoDto)
-  create(@Body() body: CreateTodoDto, @CurrentUser() user: User) {
+  async create(@Body() body: CreateTodoDto, @CurrentUser() user: User) {
     return this.todoService.create(body, user);
   }
 
@@ -66,16 +69,17 @@ export class TodoController {
   @ApiOperation({ summary: 'Delete a todo' })
   @Delete(':id')
   @UseGuards(TodoAuthGuard)
-  removeTodo(@Param('id') id: string, @UpdateTodo() todo: Todo) {
+  removeTodo(@Param('id') id: number, @UpdateTodo() todo: Todo) {
     // return this.todoService.remove(todo);
-    return this.todoService.softDelete(parseInt(id))
+    return this.todoService.softDelete(id)
   }
 
   @ApiOperation({ summary: 'Restore a todo' })
+  @UseGuards(TodoAuthGuard)
   @Get(':id')
-  restoreTodo(@Param('id') id: string) {
+  restoreTodo(@Param('id') id: number) {
     // return this.todoService.remove(todo);
-    return this.todoService.restore(parseInt(id))
+    return this.todoService.restore(id)
   }
 
   @ApiOperation({ summary: 'Get all todos with corresponding user' })
